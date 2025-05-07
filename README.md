@@ -1,4 +1,4 @@
-# go-din
+# go-din [![Go Test & Lint](https://github.com/jcooky/go-din/actions/workflows/ci.yml/badge.svg)](https://github.com/jcooky/go-din/actions/workflows/ci.yml)
 
 A lightweight dependency injection container for Go applications, leveraging Go generics for type-safe dependency management.
 
