@@ -68,6 +68,6 @@ func Set(c *Container, name Name, obj any) {
 	c.registry[name] = obj
 }
 
-func SetT[T any](c *Container, obj any) {
+func SetT[T any](c *Container, obj T) {
 	Set(c, NewTypeName[T](), obj)
 }
