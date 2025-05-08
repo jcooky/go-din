@@ -1,7 +1,6 @@
 package getnamed
 
 import (
-	"context"
 	"github.com/jcooky/go-din"
 )
 
@@ -23,7 +22,7 @@ func (a *a) Foo() string {
 }
 
 func init() {
-	din.Register(AName, func(ctx context.Context, c *din.Container) (any, error) {
+	din.Register(AName, func(c *din.Container) (any, error) {
 		return &a{
 			foo: "foo",
 		}, nil

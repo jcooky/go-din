@@ -20,3 +20,8 @@ $(GOLANG_CI_LINT):
 .PHONY: lint
 lint: $(GOLANG_CI_LINT)
 	$(GOLANG_CI_LINT) run
+
+.PHONY: fmt
+fmt:
+	go fmt ./...
+	@echo "Code formatted with gofmt"

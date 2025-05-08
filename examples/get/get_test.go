@@ -18,9 +18,9 @@ func (a *AMock) Foo() string {
 
 func TestB_Bar(t *testing.T) {
 	ctx := context.TODO()
-	container := din.NewContainer(din.EnvTest)
+	container := din.NewContainer(ctx, din.EnvTest)
 
-	b, err := din.GetT[*get.B](ctx, container)
+	b, err := din.GetT[*get.B](container)
 	require.Nil(t, err)
 
 	value := b.Bar()
@@ -29,10 +29,10 @@ func TestB_Bar(t *testing.T) {
 
 func TestBWithAMock(t *testing.T) {
 	ctx := context.TODO()
-	container := din.NewContainer(din.EnvTest)
+	container := din.NewContainer(ctx, din.EnvTest)
 
 	din.SetT[get.A](container, &AMock{})
-	b, err := din.GetT[*get.B](ctx, container)
+	b, err := din.GetT[*get.B](container)
 	require.Nil(t, err)
 
 	value := b.Bar()

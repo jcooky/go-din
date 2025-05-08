@@ -1,7 +1,6 @@
 package get
 
 import (
-	"context"
 	"fmt"
 	"github.com/jcooky/go-din"
 )
@@ -16,8 +15,8 @@ func (b *B) Bar() string {
 }
 
 func init() {
-	din.RegisterT(func(ctx context.Context, c *din.Container) (*B, error) {
-		a := din.MustGetT[A](ctx, c)
+	din.RegisterT(func(c *din.Container) (*B, error) {
+		a := din.MustGetT[A](c)
 		b := &B{
 			bar: "bar",
 			a:   a,

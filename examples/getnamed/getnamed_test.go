@@ -10,9 +10,9 @@ import (
 
 func TestB_Bar(t *testing.T) {
 	ctx := context.TODO()
-	container := din.NewContainer(din.EnvTest)
+	container := din.NewContainer(ctx, din.EnvTest)
 
-	b, err := din.Get[*getnamed.B](ctx, container, getnamed.BName)
+	b, err := din.Get[*getnamed.B](container, getnamed.BName)
 	require.Nil(t, err)
 
 	value := b.Bar()

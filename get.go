@@ -1,11 +1,10 @@
 package din
 
 import (
-	"context"
 	"fmt"
 )
 
-func Get[T any](ctx context.Context, c *Container, name Name) (res T, err error) {
+func Get[T any](c *Container, name Name) (res T, err error) {
 	if c == nil {
 		err = fmt.Errorf("container should be not nil")
 		return
@@ -23,7 +22,7 @@ func Get[T any](ctx context.Context, c *Container, name Name) (res T, err error)
 		return
 	}
 
-	obj, err := fn(ctx, c)
+	obj, err := fn(c)
 	if err != nil {
 		return
 	}
@@ -39,12 +38,12 @@ func Get[T any](ctx context.Context, c *Container, name Name) (res T, err error)
 	return
 }
 
-func GetT[T any](ctx context.Context, c *Container) (res T, err error) {
-	return Get[T](ctx, c, NewTypeName[T]())
+func GetT[T any](c *Container) (res T, err error) {
+	return Get[T](c, NewTypeName[T]())
 }
 
-func MustGet[T any](ctx context.Context, c *Container, name Name) T {
-	res, err := Get[T](ctx, c, name)
+func MustGet[T any](c *Container, name Name) T {
+	res, err := Get[T](c, name)
 	if err != nil {
 		panic(fmt.Sprintf("error: %+v", err))
 	}
@@ -52,8 +51,8 @@ func MustGet[T any](ctx context.Context, c *Container, name Name) T {
 	return res
 }
 
-func MustGetT[T any](ctx context.Context, c *Container) T {
-	res, err := Get[T](ctx, c, NewTypeName[T]())
+func MustGetT[T any](c *Container) T {
+	res, err := Get[T](c, NewTypeName[T]())
 	if err != nil {
 		panic(fmt.Sprintf("error: %+v", err))
 	}
