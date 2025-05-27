@@ -2,13 +2,16 @@ package din
 
 import (
 	"context"
+	"slices"
 )
 
 type (
-	Container struct {
+	ShutdownFunc func(ctx context.Context)
+	Container    struct {
 		context.Context
-		registry map[Name]any
-		Env      Env
+		registry      map[Name]any
+		Env           Env
+		shutdownFuncs []ShutdownFunc
 	}
 	Env string
 )
@@ -37,5 +40,16 @@ func (c *Container) WithContext(ctx context.Context) *Container {
 		Context:  ctx,
 		registry: c.registry,
 		Env:      c.Env,
+	}
+}
+
+func (c *Container) RegisterOnShutdown(fn ShutdownFunc) {
+	c.shutdownFuncs = append(c.shutdownFuncs, fn)
+}
+
+func (c *Container) Close() {
+	ctx := context.WithoutCancel(c.Context)
+	for _, fn := range slices.Backward(c.shutdownFuncs) {
+		fn(ctx)
 	}
 }
