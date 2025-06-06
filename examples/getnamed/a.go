@@ -22,7 +22,7 @@ func (a *a) Foo() string {
 }
 
 func init() {
-	din.Register(AName, func(c *din.Container) (any, error) {
+	din.Register(AName, func(c din.Container) (any, error) {
 		return &a{
 			foo: "foo",
 		}, nil

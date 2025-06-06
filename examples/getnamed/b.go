@@ -2,6 +2,7 @@ package getnamed
 
 import (
 	"fmt"
+
 	"github.com/jcooky/go-din"
 )
 
@@ -19,7 +20,7 @@ func (b *B) Bar() string {
 }
 
 func init() {
-	din.Register(BName, func(c *din.Container) (any, error) {
+	din.Register(BName, func(c din.Container) (any, error) {
 		a := din.MustGet[A](c, AName)
 		b := &B{
 			bar: "bar",

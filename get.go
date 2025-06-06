@@ -4,14 +4,14 @@ import (
 	"fmt"
 )
 
-func Get[T any](c *Container, name Name) (res T, err error) {
+func Get[T any](c Container, name Name) (res T, err error) {
 	if c == nil {
 		err = fmt.Errorf("container should be not nil")
 		return
 	}
 
 	var ok bool
-	res, ok = c.registry[name].(T)
+	res, ok = c.Get(name).(T)
 	if ok {
 		return
 	}
@@ -27,7 +27,7 @@ func Get[T any](c *Container, name Name) (res T, err error) {
 		return
 	}
 
-	c.registry[name] = obj
+	c.Set(name, obj)
 
 	res, ok = obj.(T)
 	if !ok {
@@ -38,11 +38,11 @@ func Get[T any](c *Container, name Name) (res T, err error) {
 	return
 }
 
-func GetT[T any](c *Container) (res T, err error) {
+func GetT[T any](c Container) (res T, err error) {
 	return Get[T](c, NewTypeName[T]())
 }
 
-func MustGet[T any](c *Container, name Name) T {
+func MustGet[T any](c Container, name Name) T {
 	res, err := Get[T](c, name)
 	if err != nil {
 		panic(fmt.Sprintf("error: %+v", err))
@@ -51,7 +51,7 @@ func MustGet[T any](c *Container, name Name) T {
 	return res
 }
 
-func MustGetT[T any](c *Container) T {
+func MustGetT[T any](c Container) T {
 	res, err := Get[T](c, NewTypeName[T]())
 	if err != nil {
 		panic(fmt.Sprintf("error: %+v", err))
@@ -60,14 +60,14 @@ func MustGetT[T any](c *Container) T {
 	return res
 }
 
-func Set(c *Container, name Name, obj any) {
+func Set(c Container, name Name, obj any) {
 	if c == nil {
 		panic("container should be not nil")
 	}
 
-	c.registry[name] = obj
+	c.Set(name, obj)
 }
 
-func SetT[T any](c *Container, obj T) {
+func SetT[T any](c Container, obj T) {
 	Set(c, NewTypeName[T](), obj)
 }

@@ -1,7 +1,7 @@
 package din
 
 type (
-	RegisterTFn[T any] func(*Container) (T, error)
+	RegisterTFn[T any] func(Container) (T, error)
 	RegisterFn         = RegisterTFn[any]
 )
 
@@ -14,7 +14,7 @@ func Register(name Name, fn RegisterFn) {
 }
 
 func RegisterT[T any](fn RegisterTFn[T]) {
-	g[NewTypeName[T]()] = func(c *Container) (any, error) {
+	g[NewTypeName[T]()] = func(c Container) (any, error) {
 		return fn(c)
 	}
 }

@@ -7,7 +7,14 @@ import (
 
 type (
 	ShutdownFunc func(ctx context.Context)
-	Container    struct {
+	Container    interface {
+		WithContext(ctx context.Context) Container
+		Get(name Name) any
+		Set(name Name, obj any)
+		Close()
+		RegisterOnShutdown(fn ShutdownFunc)
+	}
+	container struct {
 		context.Context
 		registry      map[Name]any
 		Env           Env
@@ -21,33 +28,41 @@ const (
 	EnvTest Env = "test"
 )
 
-func NewContainer(baseCtx context.Context, env Env) *Container {
+func NewContainer(baseCtx context.Context, env Env) Container {
 	if baseCtx == nil {
 		baseCtx = context.Background()
 	}
-	return &Container{
+	return &container{
 		Context:  baseCtx,
 		registry: map[Name]any{},
 		Env:      env,
 	}
 }
 
-func (c *Container) WithContext(ctx context.Context) *Container {
+func (c *container) Get(name Name) any {
+	return c.registry[name]
+}
+
+func (c *container) Set(name Name, obj any) {
+	c.registry[name] = obj
+}
+
+func (c *container) WithContext(ctx context.Context) Container {
 	if ctx == nil {
 		ctx = context.Background()
 	}
-	return &Container{
+	return &container{
 		Context:  ctx,
 		registry: c.registry,
 		Env:      c.Env,
 	}
 }
 
-func (c *Container) RegisterOnShutdown(fn ShutdownFunc) {
+func (c *container) RegisterOnShutdown(fn ShutdownFunc) {
 	c.shutdownFuncs = append(c.shutdownFuncs, fn)
 }
 
-func (c *Container) Close() {
+func (c *container) Close() {
 	ctx := context.WithoutCancel(c.Context)
 	for _, fn := range slices.Backward(c.shutdownFuncs) {
 		fn(ctx)

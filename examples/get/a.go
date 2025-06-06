@@ -17,7 +17,7 @@ func (a *a) Foo() string {
 }
 
 func init() {
-	din.RegisterT(func(c *din.Container) (A, error) {
+	din.RegisterT(func(c din.Container) (A, error) {
 		return &a{
 			foo: "foo",
 		}, nil
