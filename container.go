@@ -13,11 +13,12 @@ type (
 		Set(name Name, obj any)
 		Close()
 		RegisterOnShutdown(fn ShutdownFunc)
+		Env() Env
 	}
 	container struct {
 		context.Context
 		registry      map[Name]any
-		Env           Env
+		env           Env
 		shutdownFuncs []ShutdownFunc
 	}
 	Env string
@@ -35,8 +36,12 @@ func NewContainer(baseCtx context.Context, env Env) Container {
 	return &container{
 		Context:  baseCtx,
 		registry: map[Name]any{},
-		Env:      env,
+		env:      env,
 	}
+}
+
+func (c *container) Env() Env {
+	return c.env
 }
 
 func (c *container) Get(name Name) any {
@@ -54,7 +59,7 @@ func (c *container) WithContext(ctx context.Context) Container {
 	return &container{
 		Context:  ctx,
 		registry: c.registry,
-		Env:      c.Env,
+		env:      c.env,
 	}
 }
 
